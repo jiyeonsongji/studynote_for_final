@@ -39,8 +39,8 @@ ADD PRIMARY KEY(student_no);
 
 -- SELECT 기본 구조
 SELECT 칼럼1, 칼럼2  -- 어떤 칼럼을
-  FROM 테이블,      -- 어느 테이블에서
-WHERE 조건,        -- 어떤 조건으로
+FROM 테이블     -- 어느 테이블에서
+WHERE 조건        -- 어떤 조건으로
 ORDER BY 칼럼 ASC/DESC  -- 어떻게 정렬
 LIMIT n;               -- 몇 개만 조회
 -- 실행 순서: FROM -> WHERE -> SELECT -> ORDER BY, LIMIT
@@ -48,16 +48,41 @@ LIMIT n;               -- 몇 개만 조회
 -- 2012년 제작, 2019년 개봉 영화 조회
 SELECT * FROM box_office
 WHERE years = 2012
- AND release_date BETWEEN '2019-01-01' AND '2019-12-31';
+AND release_date BETWEEN '2019-01-01' AND '2019-12-31';
 
 -- 한국 도시를 이름 오름차순, 인구 내림차순으로 5건만 조회
 USE world;
 SELECT * FROM city
- WHERE countrycode = 'KOR'
+WHERE countrycode = 'KOR'
 ORDER BY name ASC, population DESC
 LIMIT 5; 
 
--- 숫자형 함수
--- ABS(-5) -> 5 (절대값)
--- ROUND(1153.456, 1) -> 1153.5 (반올림, 소수 1자리)
--- ROUND(1153.456, -1) -> 1150 (반올림, 일의 자리)
+-- GROUP BY 기본 구조
+SELECT 칼럼1, 집계함수(칼럼2),
+FROM 테이블
+WHERE 조건
+GROUP BY 칼럼1
+ORDER BY 칼럼1;
+
+-- 대륙별로 데이터 묶기
+SELECT continent
+FROM country
+GROUP BY continent;
+
+-- 칼럼 순번으로 쓰는 것도 가능
+SELECT continent, region
+FROM country
+GROUP BY 1, 2
+ORDER BY 1,2;   -- (1 = continent, 2 = region)
+
+-- 문자형 함수도 쓸 수 있음
+SELECT SUBSTRING(district, 1, 2) AS 도명
+FROM city
+WHERE countrycode = 'KOR'
+GROUP BY SUBSTRIMG(district, 1, 2)
+ORDER BY 1;
+-- district 앞 2글자 기준으로 묶기
+
+
+
+
