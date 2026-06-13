@@ -79,9 +79,59 @@ ORDER BY 1,2;   -- (1 = continent, 2 = region)
 SELECT SUBSTRING(district, 1, 2) AS 도명
 FROM city
 WHERE countrycode = 'KOR'
-GROUP BY SUBSTRIMG(district, 1, 2)
+GROUP BY SUBSTRING(district, 1, 2) -- 앞의 두 글자가 같으면 같은 지역(그룹)으로 취급
 ORDER BY 1;
--- district 앞 2글자 기준으로 묶기
+
+-- DISTINCT 중복 제거: GROUP BY 없이도 중복을 제거하고 고유한 값을 뽑을 때 사용
+-- 대륙 종류만 뽑기 (중복제거)
+SELECT DISTINCT continent
+FROM country;
+
+-- GROUP BY로 같은 결과를 낼 수 있음 (집계함수가 없어서)
+SELECT continent
+FROM country
+GROUP BY continent;
+
+
+-- GROUP BY + 집계 함수 조합 예시
+-- 2019년 개봉 영화를 유형별로 묶어서 최대/최소/전체 매출 집계
+SELECT movie_type,
+       MAX(sale_amt) AS 최대매출,
+       MIN(sale_amt) AS 최소매출,
+       SUM(sale_amt) AS 전체매출
+FROM box_office
+WHERE YEAR(release_date) = 2019
+GROUP BY movie_type;
+
+-- 연도별 개봉 영화 편수
+SELECT YEAR(release_date) release_year, COUNT(*)
+ FROM box_office
+GROUP BY YEAR(release_date)
+ORDER BY 1 DESC;
+
+-- WITH ROLLUP: GROUP BY 뒤에 WITH ROLLUP을 붙이면 항목별 합계 + 전체 총계 행 자동 추가
+SELECT movie_type, SUM(sale_amt) AS 매출합계
+FROM box_office
+WHERE YEAR(release_date) = 2019
+GROUP BY movie_type WITH ROLLUP;
+
+-- GROUPING() 함수: WITH ROLLUP과 함께 써서 어느 행이 총계 행인지 구분 가능
+SELECT movie_type, SUM(sale_amt) AS 매출합계, GROUPING(movie_type) AS 총계여부
+FROM box_office
+WHERE YEAR(release_date) = 2019
+GROUP BY movie_type WITH ROLLUP;
+
+-- HAVING절: 집계 결과에 조건 걸기
+-- 2019년 영화 중 유형별 총 매출이 1억 이상인 것만 조회
+SELECT movie_type, SUM(sale_amt) AS 총매출
+FROM box_office
+WHERE YEAR(release_date) = 2019
+GROUP BY movie_type
+HAVING SUM(sale_amt) >= 100000000
+ORDER BY 총매출 DESC;
+
+
+
 
 
 
