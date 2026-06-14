@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 조인 예상 시험지</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background: #f4f6f9;
+            color: #1a1a2e;
+            padding: 30px 16px 60px;
+        }
+
+        .exam-wrapper {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* ── 헤더 ── */
+        .exam-header {
+            background: #1a1a2e;
+            color: white;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .exam-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .exam-header .meta {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 6px;
+        }
+
+        .exam-header .warning {
+            display: inline-block;
+            margin-top: 14px;
+            background: #e63946;
+            border-radius: 6px;
+            padding: 5px 14px;
+            font-size: 0.82rem;
+            font-weight: bold;
+        }
+
+        /* ── 섹션 제목 ── */
+        .section-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background: #16213e;
+            border-radius: 8px;
+            padding: 10px 18px;
+            margin: 28px 0 14px;
+            letter-spacing: 0.03em;
+        }
+
+        /* ── 문제 카드 ── */
+        .question-card {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e0e4ef;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-header {
+            padding: 16px 20px;
+        }
+
+        .question-num {
+            display: inline-block;
+            background: #1a1a2e;
+            color: white;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 2px 9px;
+            margin-bottom: 8px;
+            letter-spacing: 0.04em;
+        }
+
+        .question-num.mc {
+            background: #e63946;
+        }
+
+        .question-num.concept {
+            background: #457b9d;
+        }
+
+        .question-text {
+            font-size: 0.97rem;
+            line-height: 1.65;
+            color: #1a1a2e;
+        }
+
+        /* ── 객관식 보기 ── */
+        .options {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option {
+            background: #f8f9fc;
+            border: 1px solid #dde2ef;
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .option:hover {
+            background: #eef0fb;
+            border-color: #a0aacc;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        /* ── SQL 코드 ── */
+        pre {
+            background: #1e2130;
+            color: #cdd6f4;
+            border-radius: 7px;
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin-top: 10px;
+            font-family: 'Consolas', 'D2Coding', monospace;
+        }
+
+        .kw {
+            color: #89b4fa;
+            font-weight: bold;
+        }
+
+        .fn {
+            color: #cba6f7;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        /* ── 테이블 ── */
+        .table-area {
+            padding: 0 20px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .table-block {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .table-label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #457b9d;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.82rem;
+        }
+
+        th {
+            background: #16213e;
+            color: #fff;
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 5px 10px;
+            border-bottom: 1px solid #e8eaf0;
+            color: #333;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8f9fc;
+        }
+
+        td.null-val {
+            color: #dc3545;
+            font-style: italic;
+        }
+
+        td.missing {
+            color: #e67e22;
+            font-style: italic;
+        }
+
+        /* ── 정답 토글 ── */
+        .answer-toggle {
+            width: 100%;
+            text-align: left;
+            background: #f0f4ff;
+            border: none;
+            border-top: 1px solid #dde2ef;
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            color: #3a4a7a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            font-weight: 600;
+            transition: background 0.15s;
+        }
+
+        .answer-toggle:hover {
+            background: #e4eaff;
+        }
+
+        .toggle-icon {
+            font-size: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        .answer-toggle.open .toggle-icon {
+            transform: rotate(90deg);
+        }
+
+        .answer-box {
+            display: none;
+            background: #fafbff;
+            border-top: 1px dashed #c5cce8;
+            padding: 16px 20px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #1a1a2e;
+        }
+
+        .answer-box.visible {
+            display: block;
+        }
+
+        .answer-label {
+            font-size: 0.72rem;
+            font-weight: bold;
+            color: #28a745;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .result-note {
+            margin-top: 10px;
+            background: #fff3cd;
+            border-left: 3px solid #ffc107;
+            padding: 7px 12px;
+            border-radius: 4px;
+            font-size: 0.83rem;
+            color: #664d03;
+        }
+
+        .trap-note {
+            margin-top: 10px;
+            background: #ffe0e3;
+            border-left: 3px solid #e63946;
+            padding: 7px 12px;
+            border-radius: 4px;
+            font-size: 0.83rem;
+            color: #7a0010;
+        }
+
+        /* ── 핵심 포인트 박스 ── */
+        .key-box {
+            background: white;
+            border: 1px solid #e0e4ef;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-top: 28px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .key-box h3 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+
+        .key-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .key-item {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 7px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .key-item strong {
+            color: #e63946;
+            display: block;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="exam-wrapper">
+
+        <!-- 헤더 -->
+        <div class="exam-header">
+            <h1>📋 데이터베이스 조인 예상 시험지</h1>
+            <div class="meta">총 25문항 · 객관식 3 + 서술형 22 · JOIN 집중</div>
+            <div class="warning">⚠️ 정답은 각 문제 하단 토글 버튼을 눌러 확인하세요</div>
+        </div>
+
+        <!-- 핵심 함정 -->
+        <div class="key-box">
+            <h3>🎯 이 시험의 핵심 함정 데이터</h3>
+            <div class="key-grid">
+                <div class="key-item"><strong>최유리 (1004)</strong>dept_no = NULL<br>→ JOIN 시 항상 매칭 안 됨</div>
+                <div class="key-item"><strong>강하늘 (1005)</strong>dept_no = 'd999'<br>→ 존재하지 않는 부서코드</div>
+                <div class="key-item"><strong>영업팀 (d003)</strong>소속 직원 0명<br>→ RIGHT/FULL OUTER 때 등장</div>
+                <div class="key-item"><strong>광주 (L04)</strong>부서 없는 도시<br>→ 3테이블 OUTER JOIN</div>
+                <div class="key-item"><strong>김민수 (1001)</strong>manager_no = NULL<br>→ SELF JOIN 매니저 없음</div>
+            </div>
+        </div>
+
+        <!-- ───────────────── 객관식 ───────────────── -->
+        <div class="section-title">【객관식】 3문항</div>
+
+        <!-- Q1 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num mc">객관식 Q1</div>
+                <div class="question-text">다음 중 LEFT OUTER JOIN에 대한 설명으로 올바른 것은?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, false)">① INNER JOIN은 왼쪽 테이블의 모든 행을 반환한다
+                    </div>
+                    <div class="option" onclick="selectOption(this, true)">② LEFT OUTER JOIN은 오른쪽 테이블에 일치하는 행이
+                        없으면 NULL로 채운다</div>
+                    <div class="option" onclick="selectOption(this, false)">③ LEFT OUTER JOIN은 INNER JOIN보다 항상
+                        결과 행 수가 적다</div>
+                    <div class="option" onclick="selectOption(this, false)">④ 두 JOIN의 결과는 항상 동일하다</div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <strong>② LEFT OUTER JOIN은 오른쪽 테이블에 일치하는 행이 없으면 NULL로 채운다</strong>
+                <div class="result-note">LEFT JOIN은 왼쪽 테이블 행을 전부 유지하고, 오른쪽에 매칭이 없으면 NULL로 채움. 그래서 결과 행 수는 INNER
+                    JOIN ≤ LEFT JOIN.</div>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num mc">객관식 Q2</div>
+                <div class="question-text">아래 쿼리의 결과 행 수는?</div>
+                <pre><span class="kw">SELECT</span> * <span class="kw">FROM</span> products <span class="kw">CROSS JOIN</span> colors;</pre>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this, false)">① 3</div>
+                    <div class="option" onclick="selectOption(this, false)">② 6</div>
+                    <div class="option" onclick="selectOption(this, true)">③ 9</div>
+                    <div class="option" onclick="selectOption(this, false)">④ 12</div>
+                </div>
+            </div>
+            <div class="table-area">
+                <div class="table-block">
+                    <div class="table-label">products</div>
+                    <table>
+                        <tr>
+                            <th>product_id</th>
+                            <th>product_name</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>티셔츠</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>모자</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>가방</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="table-block">
+                    <div class="table-label">colors</div>
+                    <table>
+                        <tr>
+                            <th>color_id</th>
+                            <th>color_name</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Red</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Blue</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Black</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <strong>③ 9행</strong>
+                <div class="result-note">CROSS JOIN = 카테시안 곱. products 3행 × colors 3행 = 9행. ON 조건 없이 모든 조합 생성.
+                </div>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num mc">객관식 Q3</div>
+                <div class="question-text">employees 테이블에서 dept_no가 NULL인 직원과 존재하지 않는 부서(d999)에 속한 직원은?</div>
+                <div class="table-area" style="padding: 12px 0 0;">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>emp_no</th>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>1001</td>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>이지은</td>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1004</td>
+                                <td>최유리</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>1005</td>
+                                <td>강하늘</td>
+                                <td class="missing">d999</td>
+                            </tr>
+                            <tr>
+                                <td>1006</td>
+                                <td>정다은</td>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td>1007</td>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="options" style="margin-top:12px;">
+                    <div class="option" onclick="selectOption(this, false)">① NULL: 0명, d999: 1명</div>
+                    <div class="option" onclick="selectOption(this, false)">② NULL: 1명, d999: 0명</div>
+                    <div class="option" onclick="selectOption(this, true)">③ NULL: 1명(최유리), d999: 1명(강하늘)</div>
+                    <div class="option" onclick="selectOption(this, false)">④ NULL: 2명, d999: 1명</div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <strong>③ 최유리(NULL), 강하늘(d999)</strong>
+                <div class="trap-note">둘 다 JOIN 시 departments와 매칭 안 됨. 이유가 다름: 최유리는 값 자체가 없고, 강하늘은 값은 있지만
+                    departments에 없는 코드.</div>
+            </div>
+        </div>
+
+        <!-- ───────────────── 서술형 SQL ───────────────── -->
+        <div class="section-title">【서술형 — SQL 작성】 17문항</div>
+
+        <!-- Q4 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q4</div>
+                <div class="question-text">직원 이름과 소속 부서명을 출력하라. <strong>부서가 없는 직원은 제외</strong>한다.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>emp_no</th>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>1001</td>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>이지은</td>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1004</td>
+                                <td>최유리</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>1005</td>
+                                <td>강하늘</td>
+                                <td class="missing">d999</td>
+                            </tr>
+                            <tr>
+                                <td>1006</td>
+                                <td>정다은</td>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td>1007</td>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                                <td>영업팀</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">INNER JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no;</pre>
+                <div class="result-note">결과: 5명 (최유리·강하늘 제외). INNER JOIN은 양쪽 모두 매칭될 때만 출력.</div>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q5</div>
+                <div class="question-text">직원 이름, 부서명, 근무 도시를 출력하라. <strong>(3개 테이블 조인)</strong></div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>이지은</td>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>정다은</td>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                                <th>location_id</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                                <td>L01</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                                <td>L02</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                                <td>L01</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">locations</div>
+                        <table>
+                            <tr>
+                                <th>location_id</th>
+                                <th>city</th>
+                            </tr>
+                            <tr>
+                                <td>L01</td>
+                                <td>서울</td>
+                            </tr>
+                            <tr>
+                                <td>L02</td>
+                                <td>부산</td>
+                            </tr>
+                            <tr>
+                                <td>L03</td>
+                                <td>대전</td>
+                            </tr>
+                            <tr>
+                                <td>L04</td>
+                                <td>광주</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name, l.city
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">JOIN</span> locations l <span class="kw">ON</span> d.location_id = l.location_id;</pre>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q6</div>
+                <div class="question-text">직원 이름과 급여 등급을 출력하라. <strong>(salary_grade 테이블 활용 — 비등치 조인)</strong>
+                </div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>salary</th>
+                            </tr>
+                            <tr>
+                                <td>김민수</td>
+                                <td>8000</td>
+                            </tr>
+                            <tr>
+                                <td>이지은</td>
+                                <td>5000</td>
+                            </tr>
+                            <tr>
+                                <td>박철수</td>
+                                <td>4500</td>
+                            </tr>
+                            <tr>
+                                <td>최유리</td>
+                                <td>3000</td>
+                            </tr>
+                            <tr>
+                                <td>강하늘</td>
+                                <td>3500</td>
+                            </tr>
+                            <tr>
+                                <td>정다은</td>
+                                <td>6200</td>
+                            </tr>
+                            <tr>
+                                <td>오지훈</td>
+                                <td>2800</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">salary_grade</div>
+                        <table>
+                            <tr>
+                                <th>grade</th>
+                                <th>min_salary</th>
+                                <th>max_salary</th>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>7000</td>
+                                <td>9999</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>5000</td>
+                                <td>6999</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>3000</td>
+                                <td>4999</td>
+                            </tr>
+                            <tr>
+                                <td>D</td>
+                                <td>0</td>
+                                <td>2999</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, s.grade
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> salary_grade s <span class="kw">ON</span> e.salary <span class="kw">BETWEEN</span> s.min_salary <span class="kw">AND</span> s.max_salary;</pre>
+                <div class="trap-note">핵심: = 대신 BETWEEN 사용 → 비등치 조인(Non-equi JOIN). 오지훈(2800) → D등급.</div>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q7</div>
+                <div class="question-text">모든 직원의 이름과 부서명을 출력하라. <strong>부서가 없는 직원도 포함하고, 부서명은 NULL로
+                        표시</strong>한다.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>이지은</td>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>최유리</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>강하늘</td>
+                                <td class="missing">d999</td>
+                            </tr>
+                            <tr>
+                                <td>정다은</td>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                                <td>영업팀</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no;</pre>
+                <div class="result-note">결과: 7명 전원 출력. 최유리·강하늘의 dept_name = NULL.</div>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q8</div>
+                <div class="question-text">직원이 <strong>한 명도 없는 부서명</strong>을 출력하라.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>이지은</td>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>최유리</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>강하늘</td>
+                                <td class="missing">d999</td>
+                            </tr>
+                            <tr>
+                                <td>정다은</td>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                                <td class="missing">영업팀</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> d.dept_name
+<span class="kw">FROM</span> departments d
+<span class="kw">LEFT JOIN</span> employees e <span class="kw">ON</span> d.dept_no = e.dept_no
+<span class="kw">WHERE</span> e.emp_no <span class="kw">IS NULL</span>;</pre>
+                <div class="result-note">결과: 영업팀(d003). LEFT JOIN 후 오른쪽이 NULL인 행 = 매칭 직원 없는 부서.</div>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q9</div>
+                <div class="question-text">모든 부서와 소속 직원 수를 출력하라. <strong>직원이 없는 부서도 포함(0으로 표시)</strong>.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                                <td class="missing">영업팀 (직원 없음)</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> d.dept_name, <span class="fn">COUNT</span>(e.emp_no) <span class="kw">AS</span> 직원수
+<span class="kw">FROM</span> departments d
+<span class="kw">LEFT JOIN</span> employees e <span class="kw">ON</span> d.dept_no = e.dept_no
+<span class="kw">GROUP BY</span> d.dept_no, d.dept_name;</pre>
+                <div class="trap-note">COUNT(*) 쓰면 안 됨! COUNT(e.emp_no)로 써야 NULL인 영업팀이 0으로 집계됨. COUNT(*)은 NULL
+                    행도 1로 셈.</div>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q10</div>
+                <div class="question-text">부서에 소속되지 않은 직원(dept_no가 NULL이거나 존재하지 않는 부서)을 <strong>LEFT
+                        JOIN으로</strong> 찾아라.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>최유리</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>강하늘</td>
+                                <td class="missing">d999</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                            </tr>
+                            <tr>
+                                <td class="missing">d999 없음</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, e.dept_no
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">WHERE</span> d.dept_no <span class="kw">IS NULL</span>;</pre>
+                <div class="result-note">결과: 최유리(NULL), 강하늘(d999) → 2명. 두 이유가 다르지만 LEFT JOIN 후 오른쪽 NULL로 동일하게
+                    잡힘.</div>
+            </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q11</div>
+                <div class="question-text">MySQL에는 <strong>FULL OUTER JOIN이 없다</strong>. UNION을 사용해 employees와
+                    departments의 FULL OUTER JOIN 결과(이름, 부서명)를 작성하라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e <span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">UNION</span>
+<span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e <span class="kw">RIGHT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no;</pre>
+                <div class="result-note">UNION은 중복 제거. UNION ALL은 중복 포함. FULL OUTER = LEFT JOIN ∪ RIGHT JOIN.
+                </div>
+            </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q12</div>
+                <div class="question-text">어떤 부서도 위치하지 않는 <strong>도시</strong>를 출력하라.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">locations</div>
+                        <table>
+                            <tr>
+                                <th>location_id</th>
+                                <th>city</th>
+                            </tr>
+                            <tr>
+                                <td>L01</td>
+                                <td>서울</td>
+                            </tr>
+                            <tr>
+                                <td>L02</td>
+                                <td>부산</td>
+                            </tr>
+                            <tr>
+                                <td>L03</td>
+                                <td>대전</td>
+                            </tr>
+                            <tr>
+                                <td>L04</td>
+                                <td class="missing">광주 (부서 없음)</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                                <th>location_id</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                                <td>L01</td>
+                            </tr>
+                            <tr>
+                                <td>d002</td>
+                                <td>인사팀</td>
+                                <td>L02</td>
+                            </tr>
+                            <tr>
+                                <td>d003</td>
+                                <td>영업팀</td>
+                                <td>L03</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                                <td>L01</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> l.city
+<span class="kw">FROM</span> locations l
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> l.location_id = d.location_id
+<span class="kw">WHERE</span> d.dept_no <span class="kw">IS NULL</span>;</pre>
+                <div class="result-note">결과: 광주(L04). L04에 매칭되는 부서가 없어 JOIN 후 오른쪽이 NULL.</div>
+            </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q13</div>
+                <div class="question-text">직원과 그 직원의 매니저 이름을 출력하라. <strong>매니저가 없는 직원도 포함</strong>. (SELF JOIN)
+                </div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees (동일 테이블 2번 사용)</div>
+                        <table>
+                            <tr>
+                                <th>emp_no</th>
+                                <th>name</th>
+                                <th>manager_no</th>
+                            </tr>
+                            <tr>
+                                <td>1001</td>
+                                <td>김민수</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>이지은</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>박철수</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1004</td>
+                                <td>최유리</td>
+                                <td>1002</td>
+                            </tr>
+                            <tr>
+                                <td>1005</td>
+                                <td>강하늘</td>
+                                <td>1002</td>
+                            </tr>
+                            <tr>
+                                <td>1006</td>
+                                <td>정다은</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1007</td>
+                                <td>오지훈</td>
+                                <td>1003</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name <span class="kw">AS</span> 직원, m.name <span class="kw">AS</span> 매니저
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> employees m <span class="kw">ON</span> e.manager_no = m.emp_no;</pre>
+                <div class="result-note">김민수의 manager_no = NULL → 매니저 컬럼이 NULL로 출력. INNER JOIN 쓰면 김민수가 제외됨.
+                </div>
+            </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q14</div>
+                <div class="question-text">매니저가 <strong>'이지은'</strong>인 직원 목록을 출력하라. (SELF JOIN)</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>emp_no</th>
+                                <th>name</th>
+                                <th>manager_no</th>
+                            </tr>
+                            <tr>
+                                <td>1001</td>
+                                <td>김민수</td>
+                                <td class="null-val">NULL</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>이지은</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>박철수</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1004</td>
+                                <td>최유리</td>
+                                <td>1002</td>
+                            </tr>
+                            <tr>
+                                <td>1005</td>
+                                <td>강하늘</td>
+                                <td>1002</td>
+                            </tr>
+                            <tr>
+                                <td>1006</td>
+                                <td>정다은</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>1007</td>
+                                <td>오지훈</td>
+                                <td>1003</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> employees m <span class="kw">ON</span> e.manager_no = m.emp_no
+<span class="kw">WHERE</span> m.name = <span class="str">'이지은'</span>;</pre>
+                <div class="result-note">이지은의 emp_no = 1002. manager_no = 1002인 직원: 최유리, 강하늘.</div>
+            </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q15</div>
+                <div class="question-text">자신의 매니저보다 <strong>급여가 높은 직원</strong>을 출력하라. (직원명, 직원급여, 매니저명, 매니저급여)
+                </div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees</div>
+                        <table>
+                            <tr>
+                                <th>name</th>
+                                <th>manager_no</th>
+                                <th>salary</th>
+                            </tr>
+                            <tr>
+                                <td>김민수</td>
+                                <td class="null-val">NULL</td>
+                                <td>8000</td>
+                            </tr>
+                            <tr>
+                                <td>이지은</td>
+                                <td>1001</td>
+                                <td>5000</td>
+                            </tr>
+                            <tr>
+                                <td>박철수</td>
+                                <td>1001</td>
+                                <td>4500</td>
+                            </tr>
+                            <tr>
+                                <td>최유리</td>
+                                <td>1002</td>
+                                <td>3000</td>
+                            </tr>
+                            <tr>
+                                <td>강하늘</td>
+                                <td>1002</td>
+                                <td>3500</td>
+                            </tr>
+                            <tr>
+                                <td>정다은</td>
+                                <td>1001</td>
+                                <td>6200</td>
+                            </tr>
+                            <tr>
+                                <td>오지훈</td>
+                                <td>1003</td>
+                                <td>2800</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name <span class="kw">AS</span> 직원, e.salary, m.name <span class="kw">AS</span> 매니저, m.salary <span class="kw">AS</span> 매니저급여
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> employees m <span class="kw">ON</span> e.manager_no = m.emp_no
+<span class="kw">WHERE</span> e.salary > m.salary;</pre>
+                <div class="result-note">정다은(6200) > 매니저 김민수(8000)? NO. 강하늘(3500) > 이지은(5000)? NO. 실제로 해당 직원 없을
+                    수도 있음 — 결과 확인이 포인트.</div>
+            </div>
+        </div>
+
+        <!-- Q16 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q16</div>
+                <div class="question-text">products와 colors의 <strong>모든 상품-색상 조합</strong>을 출력하라. (CROSS JOIN)
+                </div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">products</div>
+                        <table>
+                            <tr>
+                                <th>product_name</th>
+                            </tr>
+                            <tr>
+                                <td>티셔츠</td>
+                            </tr>
+                            <tr>
+                                <td>모자</td>
+                            </tr>
+                            <tr>
+                                <td>가방</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">colors</div>
+                        <table>
+                            <tr>
+                                <th>color_name</th>
+                            </tr>
+                            <tr>
+                                <td>Red</td>
+                            </tr>
+                            <tr>
+                                <td>Blue</td>
+                            </tr>
+                            <tr>
+                                <td>Black</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> p.product_name, c.color_name
+<span class="kw">FROM</span> products <span class="kw">CROSS JOIN</span> colors;</pre>
+                <div class="result-note">결과 9행. FK 관계가 없는 테이블에서 가능한 모든 경우의 수 나열 시 사용.</div>
+            </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q17</div>
+                <div class="question-text"><strong>서울(city = '서울')</strong>에 있는 부서의 직원 이름과 급여를 출력하라.</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">locations</div>
+                        <table>
+                            <tr>
+                                <th>location_id</th>
+                                <th>city</th>
+                            </tr>
+                            <tr>
+                                <td>L01</td>
+                                <td>서울</td>
+                            </tr>
+                            <tr>
+                                <td>L02</td>
+                                <td>부산</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="table-block">
+                        <div class="table-label">departments</div>
+                        <table>
+                            <tr>
+                                <th>dept_no</th>
+                                <th>dept_name</th>
+                                <th>location_id</th>
+                            </tr>
+                            <tr>
+                                <td>d001</td>
+                                <td>개발팀</td>
+                                <td>L01</td>
+                            </tr>
+                            <tr>
+                                <td>d004</td>
+                                <td>기획팀</td>
+                                <td>L01</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, e.salary
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">JOIN</span> locations l <span class="kw">ON</span> d.location_id = l.location_id
+<span class="kw">WHERE</span> l.city = <span class="str">'서울'</span>;</pre>
+                <div class="result-note">서울 = L01. 개발팀(d001) + 기획팀(d004) 소속 직원: 김민수, 박철수, 오지훈, 정다은.</div>
+            </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q18</div>
+                <div class="question-text">직원 이름, 부서명, 도시, 급여 등급을 한 번에 출력하라. <strong>(4개 테이블 조인)</strong></div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name, l.city, s.grade
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">JOIN</span> locations l <span class="kw">ON</span> d.location_id = l.location_id
+<span class="kw">JOIN</span> salary_grade s <span class="kw">ON</span> e.salary <span class="kw">BETWEEN</span> s.min_salary <span class="kw">AND</span> s.max_salary;</pre>
+                <div class="result-note">departments JOIN이 첫 번째라 최유리·강하늘은 자동 제외됨. salary_grade는 비등치 조인.</div>
+            </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q19</div>
+                <div class="question-text">같은 부서에 속한 <strong>직원 쌍</strong>을 출력하라. 중복 쌍 제외 (A-B만, B-A는 제외).</div>
+                <div class="table-area">
+                    <div class="table-block">
+                        <div class="table-label">employees (d001 개발팀 예시)</div>
+                        <table>
+                            <tr>
+                                <th>emp_no</th>
+                                <th>name</th>
+                                <th>dept_no</th>
+                            </tr>
+                            <tr>
+                                <td>1001</td>
+                                <td>김민수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>박철수</td>
+                                <td>d001</td>
+                            </tr>
+                            <tr>
+                                <td>1007</td>
+                                <td>오지훈</td>
+                                <td>d001</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> a.name <span class="kw">AS</span> 직원1, b.name <span class="kw">AS</span> 직원2, a.dept_no
+<span class="kw">FROM</span> employees a
+<span class="kw">JOIN</span> employees b <span class="kw">ON</span> a.dept_no = b.dept_no <span class="kw">AND</span> a.emp_no &lt; b.emp_no;</pre>
+                <div class="trap-note">a.emp_no &lt; b.emp_no 조건이 핵심. 이게 없으면 (A-B)와 (B-A) 중복 + 자기 자신 쌍도 나옴.
+                </div>
+            </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num">서술형 Q20</div>
+                <div class="question-text">급여가 <strong>가장 높은 직원</strong>의 이름과 부서명을 출력하라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">WHERE</span> e.salary = (<span class="kw">SELECT</span> <span class="fn">MAX</span>(salary) <span class="kw">FROM</span> employees);</pre>
+                <div class="result-note">결과: 김민수, 개발팀, salary = 8000. 서브쿼리로 MAX 먼저 구한 뒤 WHERE로 필터.</div>
+            </div>
+        </div>
+
+        <!-- ───────────────── 서술형 개념 ───────────────── -->
+        <div class="section-title">【서술형 — 개념 설명】 5문항</div>
+
+        <!-- Q21 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num concept">개념 Q21</div>
+                <div class="question-text">다음 쿼리의 <strong>결과 행 수와 이유</strong>를 설명하라.</div>
+                <pre><span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">WHERE</span> e.dept_no = <span class="str">'d999'</span>;</pre>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <strong>결과: 0행</strong>
+                <div class="result-note">d999는 departments 테이블에 존재하지 않으므로, INNER JOIN 시 ON 조건 e.dept_no =
+                    d.dept_no가 성립하는 행이 없어 아무것도 반환되지 않는다. 강하늘(1005)의 dept_no는 'd999'이지만 JOIN 매칭 실패.</div>
+            </div>
+        </div>
+
+        <!-- Q22 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num concept">개념 Q22</div>
+                <div class="question-text">LEFT JOIN과 WHERE절을 조합했을 때 <strong>의도치 않게 INNER JOIN처럼 동작하는
+                        경우</strong>를 예시 쿼리와 함께 설명하고, 올바른 쿼리도 함께 작성하라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <pre><span class="cm">-- ❌ 잘못된 예 (INNER JOIN처럼 동작)</span>
+<span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+<span class="kw">WHERE</span> d.dept_name = <span class="str">'개발팀'</span>;
+<span class="cm">-- WHERE절에서 NULL인 행이 필터링 → LEFT JOIN 효과 사라짐</span>
+ 
+<span class="cm">-- ✅ 올바른 예 (ON절에 조건 이동)</span>
+<span class="kw">SELECT</span> e.name, d.dept_name
+<span class="kw">FROM</span> employees e
+<span class="kw">LEFT JOIN</span> departments d <span class="kw">ON</span> e.dept_no = d.dept_no
+    <span class="kw">AND</span> d.dept_name = <span class="str">'개발팀'</span>;</pre>
+                <div class="trap-note">WHERE는 JOIN 후 필터링 → NULL 행 제거. ON은 JOIN 시 조건 적용 → NULL 행 유지. LEFT JOIN의
+                    "모두 포함" 효과를 살리려면 조건을 ON절에 써야 함.</div>
+            </div>
+        </div>
+
+        <!-- Q23 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num concept">개념 Q23</div>
+                <div class="question-text"><strong>CROSS JOIN</strong>은 언제 사용하는가? 이 예제의 테이블을 활용해 실용적인 사용 예를
+                    설명하라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                ON 조건 없이 두 테이블의 모든 행 조합(카테시안 곱)을 생성할 때 사용.<br><br>
+                <strong>이 예제에서의 활용:</strong> products(3개) × colors(3개) = 9가지 상품-색상 조합표 생성. 두 테이블 사이에 FK 관계가 없어도
+                가능한 모든 경우의 수를 나열할 때 적합.
+                <div class="result-note">다른 사용 예: 날짜 테이블 × 시간 슬롯 테이블 → 모든 예약 가능 슬롯 생성.</div>
+            </div>
+        </div>
+
+        <!-- Q24 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num concept">개념 Q24</div>
+                <div class="question-text">ON 조건에서 <strong>NULL = NULL이 FALSE인 이유</strong>를 설명하고, 이것이 이 예제의 JOIN
+                    결과에 어떤 영향을 미치는지 설명하라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                SQL에서 NULL은 "알 수 없는 값"이므로, NULL = NULL의 결과는 TRUE가 아니라 <strong>UNKNOWN</strong>으로 처리됨. WHERE/ON
+                조건에서 UNKNOWN은 FALSE와 동일하게 작동.<br><br>
+                <strong>이 예제의 영향:</strong> 최유리(dept_no = NULL)는 ON e.dept_no = d.dept_no 조건이 절대 성립하지 않으므로, INNER
+                JOIN 시 항상 제외됨. LEFT JOIN을 사용해도 왼쪽 행(최유리)은 유지되지만 오른쪽(departments)은 NULL로 채워짐.
+                <div class="trap-note">NULL 비교는 반드시 IS NULL / IS NOT NULL을 사용해야 함. WHERE dept_no = NULL은 항상 0행
+                    반환.</div>
+            </div>
+        </div>
+
+        <!-- Q25 -->
+        <div class="question-card">
+            <div class="question-header">
+                <div class="question-num concept">개념 Q25</div>
+                <div class="question-text">INNER JOIN / LEFT OUTER JOIN / RIGHT OUTER JOIN / CROSS JOIN / SELF
+                    JOIN / 비등치 조인의 차이를 <strong>각각 한 줄로 설명</strong>하고, 이 예제에서 어떤 테이블 조합에 해당하는지 써라.</div>
+            </div>
+            <button class="answer-toggle" onclick="toggleAnswer(this)">
+                <span class="toggle-icon">▶</span> 정답 확인
+            </button>
+            <div class="answer-box">
+                <div class="answer-label">✅ 정답</div>
+                <table style="margin-top:8px;">
+                    <tr>
+                        <th>JOIN 종류</th>
+                        <th>설명</th>
+                        <th>이 예제</th>
+                    </tr>
+                    <tr>
+                        <td>INNER</td>
+                        <td>양쪽 모두 매칭되는 행만 반환</td>
+                        <td>employees ↔ departments</td>
+                    </tr>
+                    <tr>
+                        <td>LEFT OUTER</td>
+                        <td>왼쪽 전부 + 오른쪽 없으면 NULL</td>
+                        <td>부서 없는 직원 포함</td>
+                    </tr>
+                    <tr>
+                        <td>RIGHT OUTER</td>
+                        <td>오른쪽 전부 + 왼쪽 없으면 NULL</td>
+                        <td>직원 없는 부서(영업팀) 포함</td>
+                    </tr>
+                    <tr>
+                        <td>CROSS</td>
+                        <td>ON 없이 모든 행 조합 (카테시안 곱)</td>
+                        <td>products × colors = 9행</td>
+                    </tr>
+                    <tr>
+                        <td>SELF</td>
+                        <td>같은 테이블끼리 조인 (별칭 2개 사용)</td>
+                        <td>employees 직원 ↔ 매니저</td>
+                    </tr>
+                    <tr>
+                        <td>비등치</td>
+                        <td>= 대신 BETWEEN/범위 조건 사용</td>
+                        <td>salary ↔ salary_grade 등급</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- end exam-wrapper -->
+
+    <script>
+        function toggleAnswer(btn) {
+            const box = btn.nextElementSibling;
+            const isOpen = box.classList.contains('visible');
+            box.classList.toggle('visible', !isOpen);
+            btn.classList.toggle('open', !isOpen);
+            btn.querySelector('.toggle-icon').textContent = isOpen ? '▶' : '▼';
+            btn.innerHTML = btn.innerHTML.replace(
+                isOpen ? '정답 숨기기' : '정답 확인',
+                isOpen ? '정답 확인' : '정답 숨기기'
+            );
+        }
+
+        function selectOption(el, isCorrect) {
+            const parent = el.closest('.options');
+            parent.querySelectorAll('.option').forEach(o => o.classList.remove('correct', 'wrong'));
+            el.classList.add(isCorrect ? 'correct' : 'wrong');
+        }
+    </script>
+</body>
+
+</html>
