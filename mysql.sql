@@ -130,9 +130,54 @@ GROUP BY movie_type
 HAVING SUM(sale_amt) >= 100000000
 ORDER BY 총매출 DESC;
 
+-- Join: 테이블끼리 관계 맺기 (두 테이블에 공통으로 있는 칼럼을 연결고리 삼아 한 번에 조회하는 것)
+-- Join 기본 구조
+SELECT 
+      별칭1.칼럼명,
+      별칭2.칼럼명
+FROM
+    테이블1 AS 별칭1
+    JOIN 테이블2 AS 별칭2
+      ON 별칭1.칼럼명 = 별칭2.칼럼명;
 
+-- 예시
+SELECT 
+    e.name, 
+    d.dept_name
+FROM 
+    employees AS e
+    JOIN departments AS d
+      ON e.dept_no = d.dept_no;
+-- 컴퓨터는 FROM -> ON -> SELECT 순서로 처리함
 
+-- INNER JOIN: 교집합 조인
+-- 방법 1: INNER JOIN + ON 절 (권장)
+SELECT a.name, a.continent, b.name AS 도시명
+FROM country a
+INNER JOIN city b
+ON a.code = b.countrycode
+WHERE a.continent = 'Asia';
 
+-- 방법 2: FROM에 쉼표, WHERE에 조인 조건 (구식이지만 결과는 동일)
+SELECT a.Name, b.Name AS 도시명
+FROM country a, city b
+WHERE a.Code = b.CountryCode
+AND a.Continent = 'Asia';
+
+-- OUTER JOIN: 한쪽 데이터는 무조건 포함
+-- LEFT JOIN: FROM 절 왼쪽(첫번째) 테이블 기준 - 왼쪽 테이블은 전부 나옴
+-- country(왼쪽) 기준: 도시가 없는 나라도 포함
+SELECT a.Name AS 나라, b.Name AS 도시
+FROM country a
+LEFT JOIN city b
+ON a.Code = b.CountryCode;
+-- 도시가 없는 나라는 도시 칼럼이 NULL로 표시됨
+
+-- RIGHT JOIN: FROM 절 오른쪽(두번째) 테이블 기준 - 오른쪽 테이블은 전부 나옴
+SELECT a.Name AS 나라, b.Name AS 도시
+FROM country a
+RIGHT JOIN city b
+ON a.Code = b.CountryCode;
 
 
 
